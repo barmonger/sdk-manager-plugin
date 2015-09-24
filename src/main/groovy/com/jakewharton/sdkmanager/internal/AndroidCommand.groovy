@@ -89,6 +89,11 @@ interface AndroidCommand {
         result += ['--proxy-host', proxyHost, '--proxy-port', proxyPort]
       }
 
+      boolean useHTTP = "y".equalsIgnoreCase(system.property('android.preferHttp'));
+      if (useHTTP) {
+        result += ['-s'];
+      }
+
       return result;
     }
   }

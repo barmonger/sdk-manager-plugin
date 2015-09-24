@@ -47,4 +47,16 @@ class AndroidCommandTest {
     def command = command.generateCommand('update', ['-a'])
     assertThat(command).containsExactly(exe, 'update', 'sdk', '-u', '-a')
   }
+
+  @Test public void useHttp() {
+    system.properties.put 'android.preferHttp', 'y'
+    def command = command.generateCommand('update', ['-a'])
+    assertThat(command).containsExactly(exe, 'update', 'sdk', '-u', '-a', '-s')
+  }
+
+  @Test public void doNotUseHttp() {
+    system.properties.put 'android.preferHttp', 'n'
+    def command = command.generateCommand('update', ['-a'])
+    assertThat(command).containsExactly(exe, 'update', 'sdk', '-u', '-a')
+  }
 }

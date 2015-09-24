@@ -3,6 +3,7 @@ package com.jakewharton.sdkmanager.internal
 import com.jakewharton.sdkmanager.FixtureName
 import com.jakewharton.sdkmanager.TemporaryFixture
 import com.jakewharton.sdkmanager.util.FakeSystem
+import com.jakewharton.sdkmanager.util.PathFixer
 import com.jakewharton.sdkmanager.util.RecordingDownloader
 import org.gradle.api.Project
 import org.gradle.api.tasks.StopExecutionException
@@ -20,6 +21,8 @@ import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrow
 class SdkResolverTest {
   @Rule public TemporaryFixture fixture = new TemporaryFixture();
 
+  private static boolean isWindows = true;
+
   Project project
   File localProperties
   FakeSystem system
@@ -36,10 +39,14 @@ class SdkResolverTest {
     system.properties.put 'user.home', fixture.root.absolutePath
 
     downloader = new RecordingDownloader()
-    sdkResolver = new SdkResolver(project, system, downloader, false)
+    sdkResolver = new SdkResolver(project, system, downloader, isWindows)
   }
 
   def writeLocalProperties(String path) {
+    if (sdkResolver.isWindows) {
+      // Escape Windows file separators when writing as a path.
+      path = path.replace "\\", "\\\\"
+    }
     localProperties.withOutputStream {
       it << "$SDK_DIR_PROPERTY=$path"
     }

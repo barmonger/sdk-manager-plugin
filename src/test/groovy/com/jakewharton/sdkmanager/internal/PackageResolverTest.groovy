@@ -239,6 +239,39 @@ class PackageResolverTest {
     assertThat(androidCommand).containsExactly('update extra-android-m2repository')
   }
 
+  @FixtureName("outdated-android-m2repository")
+  @Test public void outdatedSupportRepositoryDatabindingIsDownloaded() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.android.databinding:adapters:1.0-rc1'
+    }
+
+    packageResolver.resolveSupportLibraryRepository()
+    assertThat(androidCommand).containsExactly('update extra-android-m2repository')
+  }
+
+  @FixtureName("missing-android-m2repository")
+  @Test public void missingSupportRepositoryDatabindingIsDownloaded() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.android.databinding:adapters:1.0-rc1'
+    }
+
+    packageResolver.resolveSupportLibraryRepository()
+    assertThat(androidCommand).containsExactly('update extra-android-m2repository')
+  }
+
+  @FixtureName("up-to-date-android-m2repository")
+  @Test public void upToDateSupportRepositoryDatabindingRecognized() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.android.databinding:adapters:1.0-rc0'
+    }
+
+    packageResolver.resolveSupportLibraryRepository()
+    assertThat(androidCommand).isEmpty()
+  }
+
   @FixtureName("missing-google-m2repository")
   @Test public void noPlayServicesDependencyDoesNotDownload() {
     project.apply plugin: 'com.android.application'

@@ -1,6 +1,5 @@
 package com.jakewharton.sdkmanager.internal
 
-import com.android.sdklib.repository.FullRevision
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
@@ -10,13 +9,7 @@ import org.gradle.api.tasks.StopExecutionException
 
 import java.util.regex.Pattern
 
-import static com.android.SdkConstants.FD_BUILD_TOOLS
-import static com.android.SdkConstants.FD_EXTRAS
-import static com.android.SdkConstants.FD_M2_REPOSITORY
-import static com.android.SdkConstants.FD_PLATFORMS
-import static com.android.SdkConstants.FD_ADDONS
-import static com.android.SdkConstants.FD_PLATFORM_TOOLS
-import static com.android.SdkConstants.FD_SYSTEM_IMAGES
+import static com.android.SdkConstants.*
 
 class PackageResolver {
   static void resolve(Project project, File sdk) {
@@ -135,6 +128,7 @@ class PackageResolver {
 
   def resolveSupportLibraryRepository() {
     def supportDeps = findDependenciesStartingWith 'com.android.support'
+    supportDeps += findDependenciesStartingWith 'com.android.databinding'
 
     if (supportDeps.isEmpty()) {
       log.debug 'No support library dependency found.'

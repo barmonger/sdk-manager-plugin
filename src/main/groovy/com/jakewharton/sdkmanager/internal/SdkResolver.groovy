@@ -5,11 +5,7 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.StopExecutionException
 
-import static com.android.SdkConstants.ANDROID_HOME_ENV
-import static com.android.SdkConstants.FN_LOCAL_PROPERTIES
-import static com.android.SdkConstants.PLATFORM_WINDOWS
-import static com.android.SdkConstants.SDK_DIR_PROPERTY
-import static com.android.SdkConstants.currentPlatform
+import static com.android.SdkConstants.*
 
 class SdkResolver {
   static File resolve(Project project) {
@@ -62,7 +58,7 @@ class SdkResolver {
 
     // Look for ANDROID_HOME environment variable.
     def androidHome = system.env ANDROID_HOME_ENV
-    if (androidHome != null) {
+    if (androidHome != null && !"".equals(androidHome)) {
       def sdkDir = new File(androidHome)
       if (sdkDir.exists()) {
         log.debug "Found $ANDROID_HOME_ENV at '$androidHome'. Writing to $FN_LOCAL_PROPERTIES."

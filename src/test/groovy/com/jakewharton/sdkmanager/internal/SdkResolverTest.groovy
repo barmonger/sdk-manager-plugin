@@ -3,7 +3,6 @@ package com.jakewharton.sdkmanager.internal
 import com.jakewharton.sdkmanager.FixtureName
 import com.jakewharton.sdkmanager.TemporaryFixture
 import com.jakewharton.sdkmanager.util.FakeSystem
-import com.jakewharton.sdkmanager.util.PathFixer
 import com.jakewharton.sdkmanager.util.RecordingDownloader
 import org.gradle.api.Project
 import org.gradle.api.tasks.StopExecutionException
@@ -12,16 +11,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-import static com.android.SdkConstants.ANDROID_HOME_ENV
-import static com.android.SdkConstants.FN_LOCAL_PROPERTIES
-import static com.android.SdkConstants.SDK_DIR_PROPERTY
+import static com.android.SdkConstants.*
 import static org.fest.assertions.api.Assertions.assertThat
 import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown
 
 class SdkResolverTest {
   @Rule public TemporaryFixture fixture = new TemporaryFixture();
-
-  private static boolean isWindows = true;
 
   Project project
   File localProperties
@@ -39,17 +34,8 @@ class SdkResolverTest {
     system.properties.put 'user.home', fixture.root.absolutePath
 
     downloader = new RecordingDownloader()
+    boolean isWindows = currentPlatform() == PLATFORM_WINDOWS
     sdkResolver = new SdkResolver(project, system, downloader, isWindows)
-  }
-
-  def writeLocalProperties(String path) {
-    if (sdkResolver.isWindows) {
-      // Escape Windows file separators when writing as a path.
-      path = path.replace "\\", "\\\\"
-    }
-    localProperties.withOutputStream {
-      it << "$SDK_DIR_PROPERTY=$path"
-    }
   }
 
   /** Assert that the project's local.properties {@code sdk.dir} points at {@code sdkFolder}. */
@@ -74,6 +60,18 @@ class SdkResolverTest {
 
   @FixtureName("no-sdk")
   @Test public void missingSdk() {
+    assertThat(fixture.sdk).doesNotExist()
+    assertThat(localProperties).doesNotExist()
+    def resolvedSdk = sdkResolver.resolve()
+    assertThat(downloader).containsExactly('download')
+    assertThat(resolvedSdk).isEqualTo(fixture.sdk)
+    assertThat(resolvedSdk).exists()
+    assertLocalProperties(fixture.sdk)
+  }
+
+  @FixtureName("no-sdk")
+  @Test public void emptyAndroidHomeEnv() {
+    system.env.put ANDROID_HOME_ENV, ""
     assertThat(fixture.sdk).doesNotExist()
     assertThat(localProperties).doesNotExist()
     def resolvedSdk = sdkResolver.resolve()
@@ -108,7 +106,7 @@ class SdkResolverTest {
   @FixtureName("local-properties")
   @Test public void localPropertiesExists() {
     File sdk = new File(fixture.root, 'sdk')
-    writeLocalProperties(sdk.absolutePath)
+    sdkResolver.writeLocalProperties(sdk.absolutePath)
     def resolvedSdk = sdkResolver.resolve()
     assertThat(downloader).isEmpty()
     assertThat(resolvedSdk).isEqualTo(sdk)
@@ -128,7 +126,7 @@ class SdkResolverTest {
   @FixtureName("local-properties-from-child-project")
   @Test public void localPropertiesExistsFromChildProject() {
     File sdk = new File(fixture.root, 'sdk')
-    writeLocalProperties(sdk.absolutePath)
+    sdkResolver.writeLocalProperties(sdk.absolutePath)
 
     def childProject = new ProjectBuilder()
         .withParent(project)
@@ -143,7 +141,7 @@ class SdkResolverTest {
 
   @FixtureName("invalid-local-properties")
   @Test public void invalidLocalPropertiesThrows() {
-    writeLocalProperties('/invalid/pointer')
+    sdkResolver.writeLocalProperties('/invalid/pointer')
     try {
       sdkResolver.resolve()
       failBecauseExceptionWasNotThrown(StopExecutionException)

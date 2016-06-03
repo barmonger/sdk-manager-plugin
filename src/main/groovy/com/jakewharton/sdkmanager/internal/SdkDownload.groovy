@@ -5,10 +5,7 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.rauschig.jarchivelib.ArchiverFactory
 
-import static com.android.SdkConstants.PLATFORM_DARWIN
-import static com.android.SdkConstants.PLATFORM_LINUX
-import static com.android.SdkConstants.PLATFORM_WINDOWS
-import static com.android.SdkConstants.currentPlatform
+import static com.android.SdkConstants.*
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR
 import static org.rauschig.jarchivelib.ArchiveFormat.ZIP
 import static org.rauschig.jarchivelib.CompressionType.GZIP
@@ -32,7 +29,7 @@ enum SdkDownload {
     }
   }
 
-  final static SDK_VERSION_MAJOR = 24.2;
+  final static SDK_VERSION_MAJOR = "24.4.1";
 
   final Logger log = Logging.getLogger SdkDownload
   final String suffix

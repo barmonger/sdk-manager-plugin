@@ -1,7 +1,6 @@
 buildscript {
   repositories {
-    jcenter()
-    mavenCentral()
+    maven { url 'http://nexus/content/repositories/public/' }
   }
   
   dependencies {
@@ -13,6 +12,9 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'com.bmuschko.nexus'
 apply plugin: 'idea'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 sourceSets {
   acceptanceTest { sourceSet ->
@@ -41,7 +43,7 @@ check.dependsOn acceptanceTest
 
 dependencies {
   repositories {
-    mavenCentral()
+    maven { url 'http://nexus/content/repositories/public/' }
   }
 
   compile gradleApi()
@@ -59,7 +61,7 @@ dependencies {
 }
 
 group = 'com.jakewharton.sdkmanager'
-version = '1.5.0-SNAPSHOT'
+version = '1.5.CURA-1'
 
 install {
   repositories.mavenInstaller {

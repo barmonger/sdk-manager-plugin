@@ -61,7 +61,7 @@ dependencies {
 }
 
 group = 'com.jakewharton.sdkmanager'
-version = '1.5.CURA-1'
+version = '1.5.CURA-3'
 
 install {
   repositories.mavenInstaller {
@@ -79,13 +79,13 @@ modifyPom {
   project {
     name 'SDK Manager'
     description 'Gradle plugin which downloads and manages your Android SDK.'
-    url 'https://github.com/JakeWharton/sdk-manager-plugin'
+    url 'https://github.com/barmonger/sdk-manager-plugin'
     inceptionYear '2014'
 
     scm {
-      url 'https://github.com/JakeWharton/sdk-manager-plugin'
-      connection 'scm:git:git://github.com/JakeWharton/sdk-manager-plugin.git'
-      developerConnection 'scm:git:ssh://git@github.com/JakeWharton/sdk-manager-plugin.git'
+      url 'https://github.com/barmonger/sdk-manager-plugin'
+      connection 'scm:git:git://github.com/barmonger/sdk-manager-plugin.git'
+      developerConnection 'scm:git:ssh://git@github.com/barmonger/sdk-manager-plugin.git'
     }
 
     licenses {

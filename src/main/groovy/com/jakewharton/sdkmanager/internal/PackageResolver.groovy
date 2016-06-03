@@ -160,6 +160,9 @@ class PackageResolver {
 
   def resolvePlayServiceRepository() {
     def playServicesDeps = findDependenciesWithGroup 'com.google.android.gms'
+    playServicesDeps += findDependenciesWithGroup 'com.google.gms'
+    playServicesDeps += findDependenciesWithGroup 'com.google.firebase'
+
     if (playServicesDeps.isEmpty()) {
       log.debug 'No Google Play Services dependency found.'
       return

@@ -314,7 +314,7 @@ class PackageResolverTest {
   }
 
   @FixtureName("up-to-date-google-m2repository")
-  @Test public void upToDateFirebaseRepositoryRecognized() {
+  @Test public void upToDateGoogleServiceRepositoryRecognized() {
     project.apply plugin: 'com.android.application'
     project.dependencies {
       compile 'com.google.gms:google-services:3.0.0'
@@ -325,7 +325,7 @@ class PackageResolverTest {
   }
 
   @FixtureName("missing-google-m2repository")
-  @Test public void missingFirebaseRepositoryDownloaded() {
+  @Test public void missingGoogleServiceRepositoryDownloaded() {
     project.apply plugin: 'com.android.application'
     project.dependencies {
       compile 'com.google.gms:google-services:3.0.0'
@@ -336,7 +336,7 @@ class PackageResolverTest {
   }
 
   @FixtureName("outdated-google-m2repository")
-  @Test public void outdatedFirebaseRepositoryDownloaded() {
+  @Test public void outdatedGoogleServiceRepositoryDownloaded() {
     project.apply plugin: 'com.android.application'
     project.dependencies {
       compile 'com.google.gms:google-services:3.0.0'

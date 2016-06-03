@@ -1,3 +1,6 @@
+This fork is a product-specific fork that might not fit your needs.
+Look at the parent project for the proper sdk manager plugin: https://github.com/JakeWharton/sdk-manager-plugin
+
 SDK Manager Plugin
 ==================
 

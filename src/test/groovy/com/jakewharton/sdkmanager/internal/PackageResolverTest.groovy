@@ -313,6 +313,39 @@ class PackageResolverTest {
     assertThat(androidCommand).containsExactly('update extra-google-m2repository')
   }
 
+  @FixtureName("up-to-date-google-m2repository")
+  @Test public void upToDateFirebaseRepositoryRecognized() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.google.gms:google-services:3.0.0'
+    }
+
+    packageResolver.resolvePlayServiceRepository()
+    assertThat(androidCommand).isEmpty()
+  }
+
+  @FixtureName("missing-google-m2repository")
+  @Test public void missingFirebaseRepositoryDownloaded() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.google.gms:google-services:3.0.0'
+    }
+
+    packageResolver.resolvePlayServiceRepository()
+    assertThat(androidCommand).containsExactly('update extra-google-m2repository')
+  }
+
+  @FixtureName("outdated-google-m2repository")
+  @Test public void outdatedFirebaseRepositoryDownloaded() {
+    project.apply plugin: 'com.android.application'
+    project.dependencies {
+      compile 'com.google.gms:google-services:3.0.0'
+    }
+
+    packageResolver.resolvePlayServiceRepository()
+    assertThat(androidCommand).containsExactly('update extra-google-m2repository')
+  }
+
   @FixtureName("no-emulator-version-specified")
   @Test public void noEmulatorVersionSpecified() {
     project.apply plugin: 'com.android.application'
